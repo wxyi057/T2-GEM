@@ -1,0 +1,60 @@
+seed: 42
+use_amp: true
+resume: ""
+
+data:
+  name: promis
+  root_dir: promis
+  modalities: ["t2"]
+  metadata_name: metadata.csv
+  roi_margin_ratio: 0.5
+  image_size: [128, 128, 128]
+
+backbone:
+  name: resnet
+  in_channels: null 
+  roi_classes: null
+  grad_ckpt: true
+  depth: 18
+  sampling_ratio: 2
+  use_crf: true
+  crf_sigma: 5.0
+  crf_n_iter: 1
+  crf_smoothness_init: 0.5
+  crf_knn_k: 3
+  canonical_scale: 64
+  canonical_level: 3
+  n_epochs: 200
+  n_warmup_epochs: 10
+  lr: 1e-4
+  min_lr: 1e-6
+  betas: [0.9, 0.95]
+  batch_size: 12
+  batch_size_per_device: 12
+  num_workers_per_device: 32
+  scheduler: cosine
+  weight_decay: 1e-4
+  grad_clip_norm: 5.0
+
+  early_stopping:
+    metric:  zone_val/qwk
+    mode: max
+    patience: 25
+    min_delta: 1e-4
+
+  eval_interval: 1
+  save_checkpoint_interval: 1
+  max_n_ckpts: 1
+
+  loss: emd
+  label_smoothing: 0.1
+  focal_gamma: 2
+  emd_r: 2
+  class_weights: [0.3190, 2.7691, 2.7964, 6.8357]
+  sampler: random
+
+logging:
+  dir: wandb
+  wandb:
+    project: null
+    entity: null

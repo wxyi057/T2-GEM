@@ -1,0 +1,75 @@
+seed: 42
+
+data:
+  csv_path: metadata.csv
+  image: dwi
+  cond: t2
+  image_size: [128,128,128]
+  num_workers: 32
+
+scale_factor:
+  cond: 0.655468
+  image: 0.655468
+
+autoencoder:
+  ckpt: aekl.pt
+  spatial_dims: 3
+  in_channels: 1
+  out_channels: 1
+  num_res_blocks: 2
+  num_channels: [64, 128, 256]
+  attention_levels: [false, false, false]
+  z_channels: 3
+  norm_num_groups: 32
+
+model:
+  unet:
+    spatial_dims: 3
+    in_channels: 6
+    out_channels: 3
+    num_res_blocks: 2
+    num_channels: [256, 512, 512]
+    attention_levels: [false, true, true]
+    num_head_channels: 64
+    norm_num_groups: 32
+    resblock_updown: true
+
+flow:
+  schedule: linear
+  sigma_min: 0.0
+  start_from_noise: false
+  noising_step: 0
+
+ema:
+  beta: 0.999
+  update_every: 1
+  update_after_step: 1000
+  use_ema_for_sampling: true
+
+optim:
+  lr: 1e-4
+  weight_decay: 0.0
+  warmup_steps: 1000
+  min_lr: 1e-6
+
+train:
+  use_amp: true
+  resume: null
+  batch_size: 12
+  val_batch_size: 1
+  epochs: 100
+  val_every: 1
+  save_every: 1
+  log_every: 20
+  grad_clip_norm: 5.0
+  val_num_batches: 4
+
+sampling:
+  num_steps: 30
+  method: euler
+
+logging:
+  dir: wandb
+  wandb:
+    project: null
+    entity: null

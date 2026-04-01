@@ -1,0 +1,46 @@
+seed: 42
+
+data:
+  root: data
+  image_types: [t2, b2000]
+  image_size: [128, 128, 128]
+  num_workers: 32
+
+model:
+  spatial_dims: 3
+  in_channels: 1
+  out_channels: 1
+  num_res_blocks: 2
+  num_channels: [64, 128, 256]
+  attention_levels: [false, false, false]
+  z_channels: 3
+  norm_num_groups: 32
+
+loss:
+  kl_weight: 1e-8
+  perceptual_weight: 1.0
+  disc_weight: 0.02
+  disc_start: 0
+  disc_num_layers: 3
+  disc_num_channels: 32
+  disc_in_channels: 1
+  disc_out_channels: 1
+  disc_norm: "BATCH"
+
+optim:
+  lr_g: 1e-4
+  lr_d: 5e-4
+
+train:
+  use_amp: false
+  resume: null
+  batch_size: 2
+  epochs: 50
+  val_every: 1
+  save_every: 1
+
+logging:
+  dir: wandb
+  wandb:
+    project: null
+    entity: null
